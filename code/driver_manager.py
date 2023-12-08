@@ -38,6 +38,13 @@ from utils import utc_now
 from data_manager import manage_requests
 from session_storage import SessionStorage
 
+# Force Firefox version
+# from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+# firefox_version = '/home/eprivo/Desktop/firefox-88.0.1/firefox/firefox'
+# firefox_bin = FirefoxBinary(firefox_version)
+# gecko_version = '/home/eprivo/Desktop/geckodriver-v0.29.1-linux64/geckodriver'
+
+
 COMPLETED = REPEAT = True
 FAILED = NO_REPEAT = False
 
@@ -82,6 +89,13 @@ def build_driver(plugin, cache, update_ublock, process):
         opts = Options()
         opts.profile = profile
         driver = webdriver.Firefox(options=opts, log_path="log/geckodriver.log")
+        
+        # opts.binary_location = firefox_version
+        # opts.add_argument('-headless')
+        # driver = webdriver.Firefox(firefox_binary=firefox_bin, options=opts, log_path="log/geckodriver.log")
+        
+        # driver = webdriver.Firefox(executable_path=gecko_version, firefox_binary=firefox_bin, options=opts, log_path="log/geckodriver.log")
+        
         driver.set_page_load_timeout(60)
     except Exception as e:
         # logger.error(e)
