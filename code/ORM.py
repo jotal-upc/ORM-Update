@@ -175,9 +175,14 @@ if __name__ == '__main__':
             queue_lock.release()
             if qsize < (2 * threads):
                 logger.debug("[Main process] Getting work")
-                now = datetime.now(timezone.utc)
-                td = timedelta(-1 * update_threshold)
-                period = now + td
+                # =====================================================
+                # The following code is commented for testing purposes
+                #
+                # now = datetime.now(timezone.utc)
+                # td = timedelta(-1 * update_threshold)
+                # period = now + td
+                # =====================================================
+                period = datetime.now() # testing
                 rq = 'SELECT id FROM domain'
                 if args.priority:
                     rq += ' WHERE priority = 1'
@@ -193,7 +198,6 @@ if __name__ == '__main__':
                 if len(results) > 0:
                     # Initialize job queue
                     logger.debug("[Main process] Enqueuing work")
-                    queue_lock.acquire()
                     for result in results:
                         if args.priority:
                             domain = Connector(database, "domain")
@@ -204,7 +208,8 @@ if __name__ == '__main__':
                         work_queue.put(result["id"])
                         pending.append(str(result["id"]))
                         last_id = int(result["id"])
-                    queue_lock.release()
+                    # Why is this here?
+                    # queue_lock.release()
                 database.close()
             time.sleep(1)
     display.stop()
