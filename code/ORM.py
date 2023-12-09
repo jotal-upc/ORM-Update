@@ -198,6 +198,7 @@ if __name__ == '__main__':
                 if len(results) > 0:
                     # Initialize job queue
                     logger.debug("[Main process] Enqueuing work")
+                    queue_lock.acquire()
                     for result in results:
                         if args.priority:
                             domain = Connector(database, "domain")
@@ -208,8 +209,7 @@ if __name__ == '__main__':
                         work_queue.put(result["id"])
                         pending.append(str(result["id"]))
                         last_id = int(result["id"])
-                    # Why is this here?
-                    # queue_lock.release()
+                    queue_lock.release()
                 database.close()
             time.sleep(1)
     display.stop()
