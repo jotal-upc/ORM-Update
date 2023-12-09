@@ -1,6 +1,8 @@
 Some insights on how to run the program.
 
-## Python virtual environment
+##  Installation process
+
+### Python venv cheatsheet
 
 Creation:
 ```
@@ -12,42 +14,38 @@ Activation/deactivation:
     source orm-env/bin/activate
     deactivate
 ```
+Install requirements (inside venv):
+```
+    pip install -r requirements.txt
+```
 
 
-## MySql + Workbench
+### MySql + Workbench
+
+Install mysql & set root password:
 ```
     sudo apt install mysql-server
-```
-
-Set root password:
-```
     sudo mysql -u root
-```
-& then run this command inside MySql Monitor:
-```
-    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
-```
 
-
+    mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+```
 Download link for mysql-workbench: https://dev.mysql.com/downloads/workbench/
+Currently using: MySql-Workbench Community 8.0.34 
+
+
+### Firefox + geckodriver
+
+Extract the files in assets/firefox/:
 ```
-    MySql-Workbench Community 8.0.34
+    cd assets/firefox/
+    tar -xvf geckodriver-v0.33.0-linux64.tar.gz --one-top-level
+    tar -xvf firefox-120.0.1.tar.bz2 --one-top-level
 ```
 
 
-## Other
+### Other
 
-If pip3 throws an error while trying to install mysqlclient, try:
+Some other components that may be missing and are necessary:
 ```
-    sudo apt install libmysqlclient-dev pkg-config    
-```
-
-Need to add geckodriver folder path for it to work:
-```
-    export PATH=$PATH:/path/to/geckodriver/folder
-```
-
-Other:
-```
-    sudo apt install xvfb
+    sudo apt install libmysqlclient-dev pkg-config xvfb
 ```
