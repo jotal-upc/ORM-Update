@@ -41,11 +41,14 @@ from session_storage import SessionStorage
 # Force Firefox version
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
-geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
-# firefox v120.0.1
-# firefox_path = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-120.0.1/firefox/firefox")
-# firefox v115.5.0 ESR
-firefox_path = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
+# Paths to be used in production server
+# geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
+# firefox_path     = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
+
+# Hard-coded paths for the virtual machine
+geckodriver_path = "/home/eprivo/Desktop/geckodriver-v0.33.0-linux64/geckodriver"
+firefox_path     = "/home/eprivo/Desktop/firefox-115.5.0esr/firefox/firefox"
+
 firefox_bin = FirefoxBinary(firefox_path)
 
 COMPLETED = REPEAT = True
