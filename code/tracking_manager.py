@@ -754,8 +754,9 @@ def check_tracking(url, domain):
     get_font_fingerprinting(url)
     logger.info("Looking URL %s for canvas fingerprinting" % url.values["url"])
     get_canvas_fingerprinting(url)
-    logger.info("Looking URL %s for mouse fingerprinting" % url.values["url"])
-    get_mouse_fingerprinting(url)
+    # Mouse fingerprinting disabled because it freezes the program
+    # logger.info("Looking URL %s for mouse fingerprinting" % url.values["url"])
+    # get_mouse_fingerprinting(url)
     logger.info("Looking URL %s for WebGL fingerprinting" % url.values["url"])
     get_webgl_fingerprint(url)
 
