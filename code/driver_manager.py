@@ -31,6 +31,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException, NoS
 from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service # Used to define geckodriver bin + log_path in selenium 4.16
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 # Own modules
@@ -38,18 +39,15 @@ from utils import utc_now
 from data_manager import manage_requests
 from session_storage import SessionStorage
 
-# Force Firefox version
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 # Paths to be used in production server
 # geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
 # firefox_path     = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
 
-# Hard-coded paths for the virtual machine
+# Hardcoded paths for the virtual machine
 geckodriver_path = "/home/eprivo/Desktop/geckodriver-v0.33.0-linux64/geckodriver"
 firefox_path     = "/home/eprivo/Desktop/firefox-115.5.0esr/firefox/firefox"
 
-firefox_bin = FirefoxBinary(firefox_path)
 
 COMPLETED = REPEAT = True
 FAILED = NO_REPEAT = False
@@ -94,11 +92,13 @@ def build_driver(plugin, cache, update_ublock, process):
 
         opts = Options()
         opts.profile = profile
+        opts.binary_location = firefox_path
 
-        driver = webdriver.Firefox(executable_path=geckodriver_path,
-                                   firefox_binary=firefox_bin,
-                                   options=opts,
-                                   log_path="log/geckodriver.log")
+        geckodriver_service = Service(executable_path=geckodriver_path,
+                                      log_path="log/geckodriver.log")
+       
+        driver = webdriver.Firefox(service=geckodriver_service,
+                                   options=opts)
         
         driver.set_page_load_timeout(60)
     except Exception as e:
