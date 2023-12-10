@@ -42,7 +42,10 @@ from session_storage import SessionStorage
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
-firefox_path = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-120.0.1/firefox/firefox")
+# firefox v120.0.1
+# firefox_path = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-120.0.1/firefox/firefox")
+# firefox v115.5.0 ESR
+firefox_path = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
 firefox_bin = FirefoxBinary(firefox_path)
 
 COMPLETED = REPEAT = True
@@ -78,7 +81,7 @@ def build_driver(plugin, cache, update_ublock, process):
         profile.set_preference("browser.contentblocking.database.enabled", False)
         profile.set_preference("browser.contentblocking.fingerprinting.preferences.ui.enabled", False)
         profile.set_preference("browser.contentblocking.cryptomining.preferences.ui.enabled", False)
-
+        
         # Disable caches and enables private mode for stateless scraps
         if not cache:
             profile.set_preference("browser.cache.disk.enable", False)
@@ -88,8 +91,11 @@ def build_driver(plugin, cache, update_ublock, process):
 
         opts = Options()
         opts.profile = profile
-        
-        driver = webdriver.Firefox(executable_path=geckodriver_path, firefox_binary=firefox_bin, options=opts, log_path="log/geckodriver.log")
+
+        driver = webdriver.Firefox(executable_path=geckodriver_path,
+                                   firefox_binary=firefox_bin,
+                                   options=opts,
+                                   log_path="log/geckodriver.log")
         
         driver.set_page_load_timeout(60)
     except Exception as e:
