@@ -6,7 +6,7 @@ lxml>=4.5.0
 mysqlclient>=1.4.6
 pyrabin>=0.6
 requests>=2.23.0
-selenium==3.141.0
+selenium==4.16.0
 tldextract==4.0.0
 asn1crypto>=1.4.0
 esprima>=4.0.1
