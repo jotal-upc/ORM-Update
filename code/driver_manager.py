@@ -41,12 +41,12 @@ from session_storage import SessionStorage
 
 
 # Paths to be used in production server
-# geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
-# firefox_path     = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
+geckodriver_path = os.path.join(os.path.abspath("."), "../assets/firefox/geckodriver-v0.33.0-linux64/geckodriver")
+firefox_path     = os.path.join(os.path.abspath("."), "../assets/firefox/firefox-115.5.0esr/firefox/firefox")
 
 # Hardcoded paths for the virtual machine
-geckodriver_path = "/home/eprivo/Desktop/geckodriver-v0.33.0-linux64/geckodriver"
-firefox_path     = "/home/eprivo/Desktop/firefox-115.5.0esr/firefox/firefox"
+# geckodriver_path = "/home/eprivo/Desktop/geckodriver-v0.33.0-linux64/geckodriver"
+# firefox_path     = "/home/eprivo/Desktop/firefox-115.5.0esr/firefox/firefox"
 
 
 COMPLETED = REPEAT = True
@@ -179,7 +179,17 @@ def visit_site(db, process, driver, domain, plugin, temp_folder, cache, update_u
             driver = reset_browser(driver, process, plugin, cache, update_ublock)
         return driver, FAILED, REPEAT
     except WebDriverException as e:
-        logger.warning("WebDriverException (2) on %s / Error: %s (proc. %d)" % (domain.values["name"], str(e), process))
+        # logger.warning("WebDriverException (2) on %s / Error: %s (proc. %d)" % (domain.values["name"], str(e), process))
+       
+        # Remove Stacktrace for readability -- Most of the time this error is launched when visiting
+        # a domain with no webpage associated -- The old log message should be used in production
+        stacktrace_start = str(e).find("Stacktrace:")
+        if stacktrace_start != -1:
+            error_str = str(e)[:stacktrace_start].replace('\n','')
+        else:
+            error_str = str(e)
+        logger.warning("WebDriverException (2) on %s / Error: %s (proc. %d)" % (domain.values["name"], error_str, process))
+        
         driver = reset_browser(driver, process, plugin, cache, update_ublock)
         domain.values["update_timestamp"] = utc_now()
         domain.values["priority"] = 0
