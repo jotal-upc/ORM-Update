@@ -19,7 +19,9 @@ from setproctitle import setproctitle
 # Own modules
 from db_manager import Db, Connector
 from utils import hash_string, utc_now, extract_domain
-import parser, analyzer
+
+from mouse_code import parser, analyzer
+
 
 logging.config.fileConfig('logging.conf')
 
