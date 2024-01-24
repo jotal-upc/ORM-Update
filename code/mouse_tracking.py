@@ -19,7 +19,6 @@ from setproctitle import setproctitle
 # Own modules
 from db_manager import Db, Connector
 from utils import hash_string, utc_now, extract_domain
-
 from mouse_code import parser, analyzer
 
 
@@ -30,36 +29,43 @@ logger = logging.getLogger("TRACKING_MANAGER")
 current_timestamp = datetime.now(timezone(timedelta(hours=2), name="UTC+2"))
 
 
-def check_tracking(url, domain):
+def check_mouse_tracking(url, domain):
     db = url.db
     resource = Connector(db, "resource")
     resource.load(url.values["resource_id"])
     if not resource.values["file"]:
-        return
+        return False
         
     try:
         code = zlib.decompress(resource.values["file"])
         success, result = parser.parse(code.decode('utf-8'), False)
         if not success:
             logger.info("Mouse tracking parser error for %s: %s" % (url.values["hash"], result))
-            return
+            return False
         contents, nodes = result
         success, result = analyzer.analyze(contents, nodes, False)
         if not success:
             logger.info("Mouse tracking analyzer error for %s: %s" % (url.values["hash"], result))
-            return
+            return False
 
         if len(result) != 0:
             with open('mouse_results_all.txt', 'a') as file:
                 file.write(url.values["hash"].ljust(20) + ';'.join(result) + '\n')
 
-        suspicious = [str((node1, node2, dist, susp)) for (node1, node2, dist, susp) in result if susp]
-        if len(suspicious) != 0:
-            with open('mouse_results_suspicious.txt', 'a') as file:
-                file.write(url.values["hash"].ljust(20) + ';'.join(suspicious) + '\n')
+            suspicious = [str((node1, node2, dist, susp)) for (node1, node2, dist, susp) in result if susp]
+            if len(suspicious) != 0:
+                with open('mouse_results_suspicious.txt', 'a') as file:
+                    file.write(url.values["hash"].ljust(20) + ';'.join(suspicious) + '\n')
+
+            return True
+
+    except UnicodeDecodeError as e:
+        # Probably not an UTF-8 file
+        return False
 
     except Exception as e:
         logger.info("Mouse tracking exception for %s: %s" % (url.values["hash"], str(e)))
+        return False
 
 
 def main(process):
@@ -92,7 +98,7 @@ def main(process):
                 resource.load(url.values["resource_id"])
                 if int(resource.values["size"]) > 0:
                     logger.info('[Worker %d] Domain %s URL %s' % (process, domain.values["name"], url.values["url"]))
-                    check_tracking(url, domain)
+                    check_mouse_tracking(url, domain)
 
 
 argument_parser = argparse.ArgumentParser(description='Tracking parser')
