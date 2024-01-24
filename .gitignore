@@ -4,6 +4,8 @@ code/log
 code/tmp
 code/config.py
 
+code/mouse_code/__pycache__
+
 extra/
 
 assets/firefox/firefox-115.5.0esr/
