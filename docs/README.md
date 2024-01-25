@@ -39,7 +39,7 @@ Extract the files in assets/firefox/:
 ```
     cd assets/firefox/
     tar -xvf geckodriver-v0.33.0-linux64.tar.gz --one-top-level
-    tar -xvf firefox-120.0.1.tar.bz2 --one-top-level
+    tar -xvf firefox-115.5.0esr.tar.bz2 --one-top-level
 ```
 
 
